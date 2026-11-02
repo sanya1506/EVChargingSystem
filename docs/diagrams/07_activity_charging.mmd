@@ -1,0 +1,24 @@
+flowchart TD
+    S([Start]) --> L{Logged in?}
+    L -- No --> LG[Login / Register] --> L
+    L -- Yes --> V{Vehicle registered?}
+    V -- No --> AV[Register vehicle<br/>validate reg. no. + duplicates] --> V
+    V -- Yes --> CH{Book later or charge now?}
+    CH -- Book --> BK[Choose station, type, date, time]
+    BK --> FC{Free charger for slot?<br/>no overlapping booking}
+    FC -- No --> ER[Show 'fully booked' message] --> BK
+    FC -- Yes --> BC[Create booking BOOKED<br/>notify operator] --> AR[Customer arrives<br/>operator starts session]
+    CH -- Now --> FN{Charger of type<br/>AVAILABLE?}
+    FN -- Yes --> SS[Start session<br/>charger OCCUPIED]
+    FN -- No --> Q[Add to FIFO queue<br/>estimate wait, notify operator]
+    Q --> W{Charger freed?<br/>QueueProcessor thread}
+    W -- No --> W
+    W -- Yes --> SS
+    AR --> SS
+    SS --> ST[Operator stops session]
+    ST --> CALC[Calculate duration, kWh, end SOC,<br/>energy charge + fee + GST]
+    CALC --> BILL[Create invoice PENDING<br/>update demand_records]
+    BILL --> PAY{Pay online}
+    PAY -- Declined --> PAY
+    PAY -- Success --> INV[Invoice PAID<br/>download receipt]
+    INV --> E([End])

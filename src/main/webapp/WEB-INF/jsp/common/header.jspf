@@ -1,0 +1,47 @@
+<%@ page import="com.abcgreen.evcharging.model.*, com.abcgreen.evcharging.util.Validator, java.util.*, java.time.format.DateTimeFormatter" %>
+<%!
+    // HTML-escape helper used by every page (prevents XSS)
+    private static String h(Object o) { return Validator.html(o); }
+    private static final DateTimeFormatter DT = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
+    private static String dt(java.time.LocalDateTime t) { return t == null ? "-" : t.format(DT); }
+    private static String money(double v) { return String.format("&#8377; %,.2f", v); }
+%>
+<%
+    User currentUser = (User) session.getAttribute("user");
+    String ctx = request.getContextPath();
+    String path = request.getServletPath();
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= h(pageTitle) %> | ABC Green EV Charging</title>
+    <link rel="stylesheet" href="<%= ctx %>/assets/css/style.css">
+</head>
+<body>
+<nav class="nav">
+    <a class="brand" href="<%= ctx %>/"><span class="bolt">&#9889;</span> ABC Green EV Charging</a>
+    <a href="<%= ctx %>/stations" class="<%= path.equals("/stations") ? "active" : "" %>">Find Stations</a>
+    <% if (currentUser != null && currentUser.getRole() == Role.CUSTOMER) { %>
+        <a href="<%= ctx %>/customer/dashboard" class="<%= path.endsWith("dashboard") ? "active" : "" %>">My Dashboard</a>
+        <a href="<%= ctx %>/customer/book" class="<%= path.endsWith("book") ? "active" : "" %>">Book / Charge</a>
+        <a href="<%= ctx %>/customer/vehicles" class="<%= path.endsWith("vehicles") ? "active" : "" %>">My Vehicles</a>
+        <a href="<%= ctx %>/customer/history" class="<%= path.endsWith("history") ? "active" : "" %>">History &amp; Bills</a>
+    <% } else if (currentUser != null) { %>
+        <a href="<%= ctx %>/admin/dashboard" class="<%= path.endsWith("dashboard") ? "active" : "" %>">Admin Dashboard</a>
+        <a href="<%= ctx %>/admin/reports" class="<%= path.endsWith("reports") ? "active" : "" %>">Reports</a>
+    <% } %>
+    <span class="spacer"></span>
+    <% if (currentUser != null) { %>
+        <span class="who"><%= h(currentUser.getFullName()) %> &middot; <%= h(currentUser.getRole().getLabel()) %></span>
+        <a href="<%= ctx %>/logout">Logout</a>
+    <% } else { %>
+        <a href="<%= ctx %>/login">Login</a>
+        <a class="btn small" href="<%= ctx %>/register">Register</a>
+    <% } %>
+</nav>
+<div class="container">
+<% if (request.getAttribute("flash") != null) { %>
+    <div class="alert <%= h(request.getAttribute("flashType")) %>"><%= h(request.getAttribute("flash")) %></div>
+<% } %>

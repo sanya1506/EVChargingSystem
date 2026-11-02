@@ -1,0 +1,25 @@
+Station,City,Chargers,Sessions,Energy (kWh),Charging Hours,Utilisation %,Revenue (Rs)
+T Nagar Panagal Park,Chennai,6,80,1385.02,150.52,3.37,26115.43
+HSR Sector 2,Bengaluru,8,91,1798.91,116.13,1.95,42316.39
+Gachibowli ORR,Hyderabad,6,99,1958.16,114.23,2.56,42000.07
+Noida Expressway,Delhi,6,92,1884.34,108.32,2.43,40358.14
+Andheri Metro Plaza,Mumbai,6,84,1465.46,108.1,2.42,30370.49
+Dwarka Sector 21,Delhi,5,100,1829.49,103.98,2.8,39478.53
+Indiranagar 100ft Road,Bengaluru,4,57,1134.29,102.9,3.46,22879.88
+Hinjewadi Phase 2,Pune,5,57,1141.72,94.38,2.54,25519.78
+Bandra Kurla Complex,Mumbai,6,95,1762.69,90.98,2.04,40444.09
+Anna Nagar Tower,Chennai,7,83,1429.05,84.93,1.63,32802.23
+Whitefield Tech Park,Bengaluru,5,77,1470.14,79.07,2.13,31673.6
+Kharadi EON IT Park,Pune,5,68,1393.83,78.27,2.1,29125.04
+Electronic City Phase 1,Bengaluru,7,81,1690.1,73.0,1.4,40914.23
+Thane Highway,Mumbai,5,75,1411.03,72.12,1.94,32001.67
+Koramangala Hub,Bengaluru,6,81,1668.58,68.48,1.53,38136.49
+Banjara Hills Road 12,Hyderabad,6,58,1082.23,68.47,1.53,25406.72
+OMR Sholinganallur,Chennai,6,76,1521.43,67.72,1.52,33720.25
+Saket Select City,Delhi,8,87,1510.87,58.28,0.98,36634.55
+Connaught Place Central,Delhi,4,67,1075.98,57.02,1.92,24336.03
+Salt Lake Sector V,Kolkata,4,45,791.9,55.1,1.85,17313.66
+Hebbal Flyover Plaza,Bengaluru,6,52,876.95,46.63,1.04,20128.24
+Powai Lake Point,Mumbai,7,68,1354.16,45.92,0.88,34109.3
+HITEC City Mindspace,Hyderabad,5,37,737.53,36.52,0.98,16843.3
+SG Highway Iscon,Ahmedabad,5,0,0.0,0.0,0.0,0.0

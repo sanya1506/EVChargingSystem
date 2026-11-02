@@ -1,0 +1,29 @@
+sequenceDiagram
+    autonumber
+    actor C as Customer
+    participant F as AuthFilter
+    participant PS as PaymentServlet
+    participant B as BillingService
+    participant D as PaymentDao
+    participant DB as MySQL
+    C->>F: GET /customer/pay?id=10829
+    F->>F: session user has CUSTOMER role?
+    F->>PS: doGet
+    PS->>B: findById + ownership check
+    PS-->>C: pay.jsp (amount, GST, methods)
+    C->>F: POST method=UPI, detail=aarav@okaxis
+    F->>PS: doPost
+    PS->>B: pay(id, UPI, detail)
+    B->>B: validate UPI / card format
+    alt simulated decline (fail@upi / card ending 0000)
+        B->>D: markFailed
+        B-->>PS: PaymentException
+        PS-->>C: error message, try again
+    else success
+        B->>D: markPaid(txnRef)
+        D->>DB: UPDATE payments SET status=PAID
+        B->>DB: audit_log + notification
+        PS-->>C: redirect history, "Payment successful"
+    end
+    C->>PS: GET /customer/invoice?id=...&download=1
+    PS-->>C: invoice HTML (attachment)

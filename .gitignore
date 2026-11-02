@@ -1,0 +1,30 @@
+# Java compiled files
+*.class
+
+# Maven build output
+target/
+
+# Eclipse generated output and workspace metadata
+bin/
+.metadata/
+.settings/
+.loadpath
+
+# Logs
+*.log
+logs/
+
+# Local database credentials
+db-local.properties
+**/db-local.properties
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Temporary and backup files
+*.tmp
+*.bak
+backups/
+src/main/resources/db.properties
+**/db.properties

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0" metadata-complete="true">
+
+    <display-name>Smart EV Charging Network - Web Portal</display-name>
+
+    <!-- Security / encoding filter -->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.abcgreen.evcharging.web.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Public pages -->
+    <servlet><servlet-name>Home</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.HomeServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>Home</servlet-name><url-pattern></url-pattern></servlet-mapping>
+    <servlet-mapping><servlet-name>Home</servlet-name><url-pattern>/stations</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>Login</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.LoginServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>Login</servlet-name><url-pattern>/login</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>Register</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.RegisterServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>Register</servlet-name><url-pattern>/register</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>Logout</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.LogoutServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>Logout</servlet-name><url-pattern>/logout</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>StationApi</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.StationApiServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>StationApi</servlet-name><url-pattern>/api/stations</url-pattern></servlet-mapping>
+
+    <!-- Customer portal (requires CUSTOMER role) -->
+    <servlet><servlet-name>CustomerDashboard</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.CustomerDashboardServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>CustomerDashboard</servlet-name><url-pattern>/customer/dashboard</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>Vehicles</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.VehicleServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>Vehicles</servlet-name><url-pattern>/customer/vehicles</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>Booking</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.BookingServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>Booking</servlet-name><url-pattern>/customer/book</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>StopCharging</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.StopChargingServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>StopCharging</servlet-name><url-pattern>/customer/stop</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>History</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.HistoryServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>History</servlet-name><url-pattern>/customer/history</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>Payment</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.PaymentServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>Payment</servlet-name><url-pattern>/customer/pay</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>Invoice</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.InvoiceServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>Invoice</servlet-name><url-pattern>/customer/invoice</url-pattern></servlet-mapping>
+    <servlet-mapping><servlet-name>Invoice</servlet-name><url-pattern>/admin/invoice</url-pattern></servlet-mapping>
+
+    <!-- Admin / operator pages -->
+    <servlet><servlet-name>AdminDashboard</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.AdminDashboardServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>AdminDashboard</servlet-name><url-pattern>/admin/dashboard</url-pattern></servlet-mapping>
+
+    <servlet><servlet-name>AdminReports</servlet-name><servlet-class>com.abcgreen.evcharging.web.servlets.AdminReportServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>AdminReports</servlet-name><url-pattern>/admin/reports</url-pattern></servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+    </session-config>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/jsp/error.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/WEB-INF/jsp/error.jsp</location>
+    </error-page>
+</web-app>

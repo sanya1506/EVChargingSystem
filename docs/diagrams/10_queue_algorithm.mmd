@@ -1,0 +1,13 @@
+flowchart TD
+    A([QueueProcessor wakes up<br/>every 10 s or on wakeUp signal]) --> B[Load WAITING entries<br/>ordered by requested_at - FIFO]
+    B --> C{More entries?}
+    C -- No --> R[Recalculate wait estimates<br/>for remaining entries] --> S([Sleep / wait])
+    C -- Yes --> D[BEGIN TRANSACTION]
+    D --> E[SELECT available chargers of station + type<br/>FOR UPDATE]
+    E --> F{Any free?}
+    F -- No --> G[ROLLBACK, keep waiting] --> C
+    F -- Yes --> H[UPDATE entry SET ALLOCATED<br/>WHERE status = WAITING]
+    H --> I[Start session: charger<br/>AVAILABLE to OCCUPIED atomically]
+    I --> J[COMMIT]
+    J --> K[Notify operator: allocated]
+    K --> C

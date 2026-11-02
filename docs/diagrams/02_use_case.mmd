@@ -1,0 +1,32 @@
+flowchart LR
+    C(("Customer"))
+    O(("Operator"))
+    A(("Administrator"))
+    T(("Queue<br/>Processor<br/>(system)"))
+    subgraph System["Smart EV Charging Network Management System"]
+        UC1([Register / Login])
+        UC2([Manage Vehicles])
+        UC3([Find Stations])
+        UC4([Book Charging Slot])
+        UC5([Charge Now / Join Queue])
+        UC6([View History])
+        UC7([Pay Online - simulated])
+        UC8([Download Invoice])
+        UC9([Manage Customers])
+        UC10([Manage Stations & Chargers])
+        UC11([Start / Stop Charging])
+        UC12([Monitor Queue & Notifications])
+        UC13([Schedule Maintenance])
+        UC14([Generate Reports / Export CSV])
+        UC15([Demand Analytics / CSV Import])
+        UC16([Manage Users & Roles])
+        UC17([Backup / Restore Database])
+        UC18([Configure System])
+        UC19([Allocate Next Free Charger])
+        UC20([Notify Operator])
+    end
+    C --- UC1 & UC2 & UC3 & UC4 & UC5 & UC6 & UC7 & UC8
+    O --- UC1 & UC9 & UC10 & UC11 & UC12 & UC13 & UC14 & UC15
+    A --- UC16 & UC17 & UC18 & UC14
+    T --- UC19 & UC20
+    A -. "inherits all operator use cases" .-> O

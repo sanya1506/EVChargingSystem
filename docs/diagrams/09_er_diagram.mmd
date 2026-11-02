@@ -1,0 +1,122 @@
+erDiagram
+    USERS ||--o| CUSTOMERS : "has profile"
+    CUSTOMERS ||--o{ VEHICLES : owns
+    STATIONS ||--o{ CHARGERS : contains
+    CUSTOMERS ||--o{ BOOKINGS : makes
+    VEHICLES ||--o{ BOOKINGS : "booked for"
+    STATIONS ||--o{ BOOKINGS : at
+    CHARGERS ||--o{ BOOKINGS : reserves
+    BOOKINGS |o--o| CHARGING_SESSIONS : "fulfilled by"
+    CUSTOMERS ||--o{ CHARGING_SESSIONS : charges
+    VEHICLES ||--o{ CHARGING_SESSIONS : charged
+    CHARGERS ||--o{ CHARGING_SESSIONS : delivers
+    CHARGING_SESSIONS ||--o| PAYMENTS : billed
+    STATIONS ||--o{ QUEUE_ENTRIES : "queue at"
+    CUSTOMERS ||--o{ QUEUE_ENTRIES : waits
+    VEHICLES ||--o{ QUEUE_ENTRIES : "waiting vehicle"
+    CHARGERS |o--o{ QUEUE_ENTRIES : "allocated"
+    CHARGERS ||--o{ MAINTENANCE_SCHEDULE : maintained
+    STATIONS ||--o{ DEMAND_RECORDS : "hourly demand"
+
+    USERS {
+        int user_id PK
+        varchar username UK
+        varchar password_hash
+        varchar email UK
+        enum role
+        boolean active
+        int failed_attempts
+    }
+    CUSTOMERS {
+        int customer_id PK
+        int user_id FK,UK
+        varchar full_name
+        varchar email UK
+        varchar phone UK
+        varchar city
+    }
+    VEHICLES {
+        int vehicle_id PK
+        int customer_id FK
+        varchar registration_no UK
+        varchar make
+        varchar model
+        decimal battery_capacity_kwh
+        enum connector_type
+    }
+    STATIONS {
+        int station_id PK
+        varchar station_code UK
+        varchar name
+        varchar city
+        decimal latitude
+        decimal longitude
+        enum status
+    }
+    CHARGERS {
+        int charger_id PK
+        int station_id FK
+        varchar charger_code UK
+        enum charger_type
+        decimal power_kw
+        decimal price_per_kwh
+        enum status
+    }
+    BOOKINGS {
+        int booking_id PK
+        int customer_id FK
+        int vehicle_id FK
+        int station_id FK
+        int charger_id FK
+        datetime slot_start
+        datetime slot_end
+        enum status
+    }
+    CHARGING_SESSIONS {
+        int session_id PK
+        int booking_id FK
+        int customer_id FK
+        int vehicle_id FK
+        int charger_id FK
+        datetime start_time
+        datetime end_time
+        int start_soc
+        decimal energy_kwh
+        decimal cost
+        enum status
+    }
+    PAYMENTS {
+        int payment_id PK
+        int session_id FK,UK
+        varchar invoice_no UK
+        decimal energy_charge
+        decimal tax_amount
+        decimal total_amount
+        enum method
+        enum status
+    }
+    QUEUE_ENTRIES {
+        int queue_id PK
+        int station_id FK
+        int customer_id FK
+        int vehicle_id FK
+        enum charger_type
+        datetime requested_at
+        int estimated_wait_min
+        enum status
+    }
+    MAINTENANCE_SCHEDULE {
+        int maintenance_id PK
+        int charger_id FK
+        date scheduled_date
+        enum maintenance_type
+        enum status
+    }
+    DEMAND_RECORDS {
+        int demand_id PK
+        int station_id FK
+        date demand_date
+        tinyint hour_of_day
+        int sessions_count
+        decimal energy_kwh
+    }

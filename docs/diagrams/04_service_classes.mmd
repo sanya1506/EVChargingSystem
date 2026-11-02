@@ -1,0 +1,56 @@
+classDiagram
+    direction LR
+    class BaseDao {
+        <<abstract>>
+        #query(sql, RowMapper, params) List
+        #update(sql, params) int
+        #insert(sql, params) int
+    }
+    class RowMapper~T~ {
+        <<interface>>
+        +map(ResultSet) T
+    }
+    class Transaction {
+        +execute(Work)$ T
+    }
+    class ChargingService {
+        +startSession(...) ChargingSession
+        +chargeNow(...) ChargeRequestResult
+        +stopSession(id) Payment
+    }
+    class QueueService {
+        +joinQueue(...) QueueEntry
+        +estimateWait(station, type, pos) int
+        +processQueue() int
+    }
+    class QueueProcessor {
+        <<Runnable thread>>
+        +start()$
+        +wakeUp()$
+        +run()
+    }
+    class BillingService {
+        +calculateBill(Billable, kWh) Payment
+        +pay(id, method, detail) Payment
+    }
+    class EVChargingException
+    class ValidationException
+    class DuplicateRecordException
+    class ChargerUnavailableException
+    class AuthenticationException
+    class PaymentException
+    BaseDao <|-- SessionDao
+    BaseDao <|-- QueueDao
+    BaseDao <|-- ChargerDao
+    BaseDao ..> RowMapper
+    ChargingService --> SessionDao
+    ChargingService --> BillingService
+    ChargingService --> QueueService : full station
+    QueueService --> ChargingService : auto-start
+    QueueProcessor --> QueueService
+    ChargingService ..> Transaction
+    EVChargingException <|-- ValidationException
+    EVChargingException <|-- DuplicateRecordException
+    EVChargingException <|-- ChargerUnavailableException
+    EVChargingException <|-- AuthenticationException
+    EVChargingException <|-- PaymentException

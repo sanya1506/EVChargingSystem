@@ -1,0 +1,109 @@
+classDiagram
+    direction TB
+    class Person {
+        <<abstract>>
+        -String fullName
+        -String email
+        -String phone
+        +getDisplayRole()* String
+    }
+    class User {
+        -int userId
+        -String username
+        -String passwordHash
+        -Role role
+        -boolean active
+    }
+    class Customer {
+        -int customerId
+        -String city
+        -List~Vehicle~ vehicles
+    }
+    class Role {
+        <<enumeration>>
+        ADMIN
+        OPERATOR
+        CUSTOMER
+    }
+    class Vehicle {
+        -String registrationNo
+        -String make
+        -String model
+        -double batteryCapacityKwh
+        -String connectorType
+    }
+    class ChargingStation {
+        -String stationCode
+        -String name
+        -String city
+        -double latitude
+        -double longitude
+        -List~Charger~ chargers
+        +getUtilisationPercent() double
+    }
+    class Billable {
+        <<interface>>
+        +calculateEnergyCharge(kWh) double
+        +getServiceFee() double
+    }
+    class Charger {
+        <<abstract>>
+        -String chargerCode
+        -double powerKw
+        -double pricePerKwh
+        -ChargerStatus status
+        +create(ChargerType)$ Charger
+        +getType()* ChargerType
+        +getEfficiency()* double
+        +calculateEnergyDelivered(min, battery, soc) double
+        +estimateMinutes(battery, from, to) int
+    }
+    class FastCharger {
+        +getEfficiency() 0.92
+        +getServiceFee() 30
+    }
+    class SlowCharger {
+        +getEfficiency() 0.88
+        +getServiceFee() 10
+    }
+    class Booking {
+        -LocalDateTime slotStart
+        -LocalDateTime slotEnd
+        -String status
+    }
+    class ChargingSession {
+        -LocalDateTime startTime
+        -LocalDateTime endTime
+        -int startSoc
+        -double energyKwh
+        -int durationMinutes
+        -double cost
+    }
+    class QueueEntry {
+        -ChargerType chargerType
+        -LocalDateTime requestedAt
+        -int estimatedWaitMin
+        +compareTo(QueueEntry) int
+    }
+    class Payment {
+        -String invoiceNo
+        -double energyCharge
+        -double taxAmount
+        -double totalAmount
+        -String status
+    }
+    Person <|-- User
+    Person <|-- Customer
+    User --> Role
+    Billable <|.. Charger
+    Charger <|-- FastCharger
+    Charger <|-- SlowCharger
+    Customer "1" *-- "many" Vehicle
+    ChargingStation "1" *-- "many" Charger
+    Customer "1" --> "many" Booking
+    Booking --> Charger
+    ChargingSession --> Charger
+    ChargingSession --> Vehicle
+    ChargingSession "1" --> "0..1" Payment
+    QueueEntry --> ChargingStation
+    QueueEntry --> Vehicle

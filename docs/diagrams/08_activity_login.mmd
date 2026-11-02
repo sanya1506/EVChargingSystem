@@ -1,0 +1,18 @@
+flowchart TD
+    A([Login request]) --> B{Username and<br/>password entered?}
+    B -- No --> X1[ValidationException] --> Z([Show error])
+    B -- Yes --> C[Find user by username or email]
+    C --> D{User exists?}
+    D -- No --> X2[AuthenticationException<br/>'Invalid username or password'] --> Z
+    D -- Yes --> E{Account active?}
+    E -- No --> X3[Account locked / disabled] --> Z
+    E -- Yes --> F[PBKDF2 hash entered password<br/>with stored salt, 65536 iterations]
+    F --> G{Hash matches?<br/>constant-time compare}
+    G -- No --> H[failed_attempts + 1<br/>audit LOGIN_FAILED]
+    H --> I{attempts >= 5?}
+    I -- Yes --> J[Lock account] --> Z
+    I -- No --> X2
+    G -- Yes --> K[Reset failed attempts, update last_login<br/>audit LOGIN]
+    K --> M{Role}
+    M -- CUSTOMER --> N[Web customer dashboard]
+    M -- ADMIN / OPERATOR --> O[Desktop console / admin dashboard]

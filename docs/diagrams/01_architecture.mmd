@@ -1,0 +1,33 @@
+flowchart TB
+    subgraph Clients["Presentation Layer"]
+        SW["Swing Desktop App<br/>(Admin / Operator)<br/>ui.*"]
+        BR["Web Browser<br/>(Customer / Admin)"]
+    end
+    subgraph Web["Embedded Apache Tomcat 10"]
+        F["AuthFilter<br/>(role-based access)"]
+        SV["Servlets<br/>web.servlets.*"]
+        JSP["JSP Views<br/>WEB-INF/jsp"]
+    end
+    subgraph Biz["Service Layer (business rules)  service.*"]
+        AS["AuthService"]
+        CS["Customer / Station<br/>Services"]
+        CH["ChargingService<br/>BookingService"]
+        QS["QueueService"]
+        BS["BillingService"]
+        RS["Report / Demand /<br/>Backup Services"]
+        QP(["QueueProcessor<br/>background thread"])
+    end
+    subgraph Data["Data Access Layer  dao.*"]
+        DAO["DAOs + BaseDao<br/>(JDBC PreparedStatement)"]
+        TX["Transaction<br/>(commit / rollback)"]
+    end
+    DB[("MySQL 8<br/>ev_charging_db<br/>14 tables + view")]
+    FS[/"Files: CSV reports, SQL backups,<br/>logs/application.log"/]
+
+    SW --> Biz
+    BR -- HTTP --> F --> SV --> Biz
+    SV --> JSP
+    QP --> QS
+    Biz --> DAO --> DB
+    TX -.-> DAO
+    RS --> FS

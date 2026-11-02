@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    actor C as Customer (web)
+    participant BS as BookingServlet
+    participant CS as ChargingService
+    participant QS as QueueService
+    participant DB as MySQL
+    participant QP as QueueProcessor thread
+    actor O as Operator (desktop)
+    C->>BS: POST /customer/book (action=now)
+    BS->>CS: chargeNow(customer, vehicle, station, FAST, soc)
+    CS->>DB: SELECT free FAST chargers ... FOR UPDATE
+    DB-->>CS: none free
+    CS->>QS: joinQueue(...)
+    QS->>QS: estimateWait() using PriorityQueue
+    QS->>DB: INSERT queue_entries / notifications
+    QS-->>BS: QueueEntry(position, est. wait)
+    BS-->>C: "Added to queue, wait ~43 min"
+    O->>CS: stopSession(sessionId)
+    CS->>DB: UPDATE session, charger AVAILABLE, INSERT payment (one transaction)
+    CS->>QP: wakeUp()
+    QP->>QS: processQueue()
+    QS->>DB: find free charger, mark entry ALLOCATED
+    QS->>CS: startSession(queued vehicle)
+    QS->>DB: INSERT notification "allocated to charger"
+    O-->>O: dashboard shows notification
